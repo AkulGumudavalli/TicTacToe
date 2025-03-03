@@ -3,24 +3,18 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class TicTacToeFrame extends JFrame {
-    // The game board (model) represented as a 3x3 char array
     private final char[][] board = new char[3][3];
-    private char currentPlayer = 'X'; // X always starts
+    private char currentPlayer = 'X';
     private int moveCount = 0;
 
-    // 2D array of custom buttons (the view)
     private final TicTacToeButton[][] buttons = new TicTacToeButton[3][3];
 
     public TicTacToeFrame() {
         super("Tic Tac Toe");
         setLayout(new BorderLayout());
 
-        // Create board panel with a 3x3 grid layout
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
-        // Use a single listener for all board buttons
         BoardButtonListener listener = new BoardButtonListener();
-
-        // Initialize board state and buttons
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 board[row][col] = ' '; // empty square
@@ -32,7 +26,6 @@ public class TicTacToeFrame extends JFrame {
         }
         add(boardPanel, BorderLayout.CENTER);
 
-        // Bottom panel with a Quit button
         JPanel bottomPanel = new JPanel();
         JButton quitButton = new JButton("Quit");
         quitButton.addActionListener(e -> {
@@ -55,9 +48,6 @@ public class TicTacToeFrame extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Resets the board and button states for a new game.
-     */
     private void resetBoard() {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -70,11 +60,6 @@ public class TicTacToeFrame extends JFrame {
         moveCount = 0;
     }
 
-    /**
-     * Checks whether the given player has won the game.
-     * @param player The player mark to check ('X' or 'O')
-     * @return true if the player has three in a row, false otherwise.
-     */
     private boolean checkWin(char player) {
         // Check rows
         for (int i = 0; i < 3; i++) {
@@ -106,10 +91,7 @@ public class TicTacToeFrame extends JFrame {
         return false;
     }
 
-    /**
-     * Ends the game, showing a message and prompting the user to play again.
-     * @param message The message to display (win or tie)
-     */
+
     private void gameOver(String message) {
         int option = JOptionPane.showConfirmDialog(
                 this,
@@ -123,11 +105,6 @@ public class TicTacToeFrame extends JFrame {
         }
     }
 
-    /**
-     * A single listener class that is used for all the Tic Tac Toe board buttons.
-     * It determines the row and column of the clicked button, makes the move if legal,
-     * updates the game state, checks for a win or tie, and then switches players.
-     */
     private class BoardButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -135,7 +112,6 @@ public class TicTacToeFrame extends JFrame {
             int row = btn.getRow();
             int col = btn.getCol();
 
-            // Check for an illegal move (square already taken)
             if (board[row][col] != ' ') {
                 JOptionPane.showMessageDialog(
                         TicTacToeFrame.this,
@@ -145,25 +121,23 @@ public class TicTacToeFrame extends JFrame {
                 return;
             }
 
-            // Valid move: update board state and button display
             board[row][col] = currentPlayer;
             btn.setText(String.valueOf(currentPlayer));
             btn.setEnabled(false);
             moveCount++;
 
-            // Check for a win (starting with move 5)
             if (moveCount >= 5 && checkWin(currentPlayer)) {
                 gameOver("Player " + currentPlayer + " wins!");
                 return;
             }
 
-            // Check for tie (when the board is full)
+
             if (moveCount == 9) {
                 gameOver("The game is a tie!");
                 return;
             }
 
-            // Switch player for next turn
+
             currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
         }
     }
